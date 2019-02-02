@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
-import Activity from '../Components/Activity';
+import Activity from '../../Components/Activity';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = () => ({
@@ -58,10 +58,11 @@ class Activities extends Component {
     this.setState({ currentActivity: event.target.value });
   }
 
-  handleActivityToggle = index => {
+  handleActivityToggle = (index, e) => {
     const updatedActivities = [...this.state.activities];
     updatedActivities[index].status = updatedActivities[index].status === "complete" ? "incomplete" : "complete";
     this.setState({ activities: updatedActivities });
+    e && e.stopPropagation();
   }
 
   handleActivityDelete = index => {
