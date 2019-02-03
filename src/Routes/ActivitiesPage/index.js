@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Activity from '../../Components/Activity';
-import ActivityForm from '../../Components/ActivityForm'
+import FormModal from '../../Components/FormModal';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
 import {
@@ -39,28 +40,31 @@ class Activities extends Component {
         details: "have to take a break and drink water",
       },
     ],
-    currentActivity: DEFAULT_ACTIVITY,
+    editMode: false,
   };
 
-  submitActivity = event => {
-    event.preventDefault();
-    this.setState(({activities, currentActivity}) => ({
-      currentActivity: DEFAULT_ACTIVITY,
+  activateEditMode = () => {
+    this.setState({ editMode: true });
+  }
+
+  deactivateEditMode = () => {
+    this.setState({ editMode: false });
+  }
+
+  submitActivity = (activity) => {
+    console.log(activity);
+    this.setState(({ activities }) => ({
       activities: [
         ...activities, 
         { 
-          name: currentActivity.name,
-          categories: currentActivity.categories,
-          dueDate: currentActivity.dueDate,
-          status: currentActivity.status,
-          details: currentActivity.details,
+          name: activity.name,
+          categories: activity.categories,
+          dueDate: activity.dueDate,
+          status: activity.status,
+          details: activity.details,
         }
       ]
     }));
-  }
-
-  handleActivityInput = event => {
-    this.setState({ currentActivity: { ...this.state.currentActivity, [event.target.id]: event.target.value} });
   }
 
   handleActivityToggle = (index, e) => {
@@ -82,45 +86,36 @@ class Activities extends Component {
     this.setState({ activities: updatedActivities });
   }
 
-  handleCategoryToggle = category => {
-    const { currentActivity } = this.state;
-    const currentCategory = currentActivity.categories;
-    if (currentCategory.includes(category)) {
-      const updatedCategories = [...currentCategory]
-      updatedCategories.splice(currentCategory.indexOf(category), 1)
-      this.setState({currentActivity: {...currentActivity, categories: updatedCategories}})
-    } else {
-      this.setState({ currentActivity: { ...currentActivity, categories: [...currentCategory, category] } })
-    }
-  }
-
   render() {
     const { classes } = this.props;
     const {
       activities,
-      currentActivity
     } = this.state;
     
     return (
       <div>
-        <ActivityForm 
-          handleSubmit={this.submitActivity}
-          handleActivityInput={this.handleActivityInput}
-          handleCategoryToggle={this.handleCategoryToggle}
-          {...currentActivity} />
-      <div className={classes.activitiesContainer}>
-        {
-          activities.map((activity, index) => 
-            <Activity 
-              {...activity} 
-              id={index} 
-              key={index} 
-              edit={this.handleActivityEdit}
-              remove={this.handleActivityDelete} 
-              toggle={this.handleActivityToggle} />)
-        }
-      </div>
+        <Button onClick={this.activateEditMode} variant="contained" color="primary" >
+          Track an activity
+        </Button>
+        <div className={classes.activitiesContainer}>
+          {
+            activities.map((activity, index) => 
+              <Activity 
+                {...activity} 
+                handleSubmit={this.handleActivityEdit}
+                handleActivityInput={this.handleActivityInput}
+                handleCategoryToggle={this.handleCategoryToggle}
+                id={index} 
+                key={index} 
+                remove={this.handleActivityDelete} 
+                toggle={this.handleActivityToggle} />)
+          }
         </div>
+        <FormModal 
+          handleSubmit={this.submitActivity}
+          editMode={this.state.editMode}
+          handleClose={this.deactivateEditMode} />
+      </div>
     );
   }
 }

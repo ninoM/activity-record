@@ -4,10 +4,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import Typography from '@material-ui/core/Typography';
+import FormModal from '../FormModal';
 import Chip from '@material-ui/core/Chip';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import TextField from '@material-ui/core/TextField';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Button from '@material-ui/core/Button';
@@ -51,6 +49,7 @@ class Activity extends Component {
             {
               Object.keys(categories).map(categoryKey => 
                 <Chip 
+                key={categoryKey}
                 color="secondary"
                 variant="default"
                 label={categories[categoryKey]} />
@@ -59,12 +58,11 @@ class Activity extends Component {
           </ExpansionPanelDetails>
           <ExpansionPanelActions>
           <Button onClick={() => { remove(id) }} color="secondary">Remove</Button>
-            <Button onClick={this.edit} variant="contained" color="primary">
+            <Button onClick={this.activateEditMode} variant="contained" color="primary">
               Edit activity
             </Button>
           </ExpansionPanelActions>
         </ExpansionPanel>
-
       </React.Fragment>
     );
   }
