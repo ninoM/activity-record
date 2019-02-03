@@ -23,8 +23,13 @@ This app records your activities! No concept of users yet so this is a shared da
 
 ## **Shameful things that needs some explaining**
 
-- Attempted to make an optimistic UI. The basics are there but needs way more UI stuff to be added so it's obvious to the users what's happening.
+- Attempted to make an [optimistic UI](https://uxplanet.org/optimistic-1000-34d9eefe4c05?gi=c53ec13ae552). The basics are there but needs way more UI stuff to be added, so it's obvious to the users what's happening.
   - ~~Bug due to this is if you add then delete immediately without the activity syncing to Firebase~~ _fixed!_
-- Haven't taken a look at all if layout is responsive :(
+- Haven't taken a look at all if layout is responsive
+- No network handling whatsoever so some crashes might occur due to network hiccups.
 - Needs **major** refactoring. Like seriously..
   - ~~Using index for the keys so when deleting an activity with another activity below, the next activity will be open~~ _fixed!_
+  - More abstraction for components will result in cleaner code.
+  - UI / Layout
+
+## Total working hours: _60h (two and a half days)_
