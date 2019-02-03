@@ -26,3 +26,4 @@ This app records your activities! No concept of users yet so this is a shared da
 - Attempted to make an optimistic UI. The basics are there but needs way more UI stuff to be added so it's obvious to the users what's happening.
   - ~~Bug due to this is if you add then delete immediately without the activity syncing to Firebase~~ _fixed!_
 - Needs **major** refactoring. Like seriously..
+  - ~~Using index for the keys so when deleting an activity with another activity below, the next activity will be open~~ _fixed!_
