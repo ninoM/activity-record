@@ -38,6 +38,7 @@ class Activity extends Component {
   
   render() {
     const {
+      index,
       id,
       name,
       dueDate,
@@ -54,7 +55,7 @@ class Activity extends Component {
         <ExpansionPanel className={classes.root}>
           <ExpansionPanelSummary>
             <Typography  variant="h6">
-            <IconButton onClick={e => { toggle(id, e) }}>
+            <IconButton onClick={e => { toggle(index, e) }}>
               {status === "complete" ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }
             </IconButton>
             { status === "complete" ? <del>{name}</del> : name}
@@ -75,16 +76,17 @@ class Activity extends Component {
             }
           </ExpansionPanelDetails>
           <ExpansionPanelActions>
-          <Button onClick={() => { remove(id) }} color="secondary">Remove</Button>
+          <Button onClick={() => { remove(index) }} color="secondary">Remove</Button>
             <Button onClick={this.activateEditMode} variant="contained" color="primary">
               Edit activity
             </Button>
           </ExpansionPanelActions>
         </ExpansionPanel>
         <FormModal 
-          id={id}
+          index={index}
           activity={
             {
+              id,
               name,
               details,
               categories,

@@ -5,6 +5,7 @@ export const ACTIVITY_CATEGORIES = {
 }
 
 export const DEFAULT_ACTIVITY = {
+  id: "",
   name: "",
   categories: [],
   dueDate: "tomorrow",

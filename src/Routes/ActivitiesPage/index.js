@@ -3,11 +3,7 @@ import Activity from '../../Components/Activity';
 import FormModal from '../../Components/FormModal';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-
-import {
-  ACTIVITY_CATEGORIES,
-  DEFAULT_ACTIVITY,
-} from '../../constant';
+import { Firestore } from '../../ApiLayer';
 
 const styles = () => ({
   activitiesContainer: {
@@ -17,29 +13,7 @@ const styles = () => ({
 
 class Activities extends Component {
   state = {
-    activities: [
-      {
-        name: "Buy new tires",
-        categories: ["personal"],
-        dueDate: "Next week",
-        status: "complete",
-        details: "4 tires to buy",
-      },
-      {
-        name: "Get business cards",
-        categories: ["business"],
-        dueDate: "tomorrow",
-        status: "incomplete",
-        details: "have to pick up all 500 business cards",
-      },
-      {
-        name: "Take a break",
-        categories: ["personal", "leisure"],
-        dueDate: "in an hour",
-        status: "incomplete",
-        details: "have to take a break and drink water",
-      },
-    ],
+    activities: [],
     editMode: false,
   };
 
@@ -52,19 +26,26 @@ class Activities extends Component {
   }
 
   submitActivity = (activity) => {
-    console.log(activity);
     this.setState(({ activities }) => ({
       activities: [
         ...activities, 
-        { 
-          name: activity.name,
-          categories: activity.categories,
-          dueDate: activity.dueDate,
-          status: activity.status,
-          details: activity.details,
-        }
+        {...activity},
       ]
     }));
+
+    // Update firebase
+    Firestore.collection("activities").add({
+      ...activity
+    }).then(ref => {
+      const updatedActivities = this.state.activities.map(activity => {
+        if (activity.id === undefined) {
+          return ({...activity, id: ref.id})
+        } else {
+          return activity
+        }
+      });
+      this.setState({ activities: updatedActivities });
+    })
   }
 
   handleActivityToggle = (index, e) => {
@@ -72,19 +53,44 @@ class Activities extends Component {
     updatedActivities[index].status = updatedActivities[index].status === "complete" ? "incomplete" : "complete";
     this.setState({ activities: updatedActivities });
     e && e.stopPropagation();
+
+    this.updateActivityInFirebase(updatedActivities[index]);
   }
 
   handleActivityDelete = index => {
     const updatedActivities = [...this.state.activities];
+    const firebaseId = updatedActivities[index].id;
     updatedActivities.splice(index, 1);
     this.setState({ activities: updatedActivities });
+    Firestore.collection("activities").doc(firebaseId).delete();
   }
 
   handleActivityEdit = (updatedActivity, index) => {
     const updatedActivities = [...this.state.activities]
     updatedActivities[index] = updatedActivity;
     this.setState({ activities: updatedActivities });
+
+    this.updateActivityInFirebase(updatedActivity);
   }
+
+  updateActivityInFirebase = ({id, ...updatedActivity}) => {
+    Firestore.collection("activities").doc(id).set({ ...updatedActivity });
+  }
+
+  componentDidMount() {
+    const fetchedActivities = [];
+    Firestore.collection("activities").get().then(snapshot => {
+      snapshot.forEach(doc => {
+        const activity = doc.data();
+        activity["id"] = doc.id;
+        fetchedActivities.push(activity);
+      })
+    }).then(() => {
+      this.setState({activities: fetchedActivities});
+    })
+
+  }
+  
 
   render() {
     const { classes } = this.props;
@@ -106,8 +112,8 @@ class Activities extends Component {
                 handleActivityInput={this.handleActivityInput}
                 handleCategoryToggle={this.handleCategoryToggle}
                 edit={this.handleActivityEdit}
-                id={index} 
                 key={index} 
+                index={index}
                 remove={this.handleActivityDelete} 
                 toggle={this.handleActivityToggle} />)
           }
