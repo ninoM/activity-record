@@ -5,7 +5,7 @@ import Chip from '@material-ui/core/Chip';
 import { ACTIVITY_CATEGORIES, DEFAULT_ACTIVITY } from '../../constant'
 
 class ActivityForm extends Component {
-  state = { ...DEFAULT_ACTIVITY }
+  state = { ...DEFAULT_ACTIVITY, }
 
   handleActivityInput = event => {
     this.setState({ [event.target.id]: event.target.value });
@@ -22,6 +22,14 @@ class ActivityForm extends Component {
     }
   }
 
+  componentDidMount() {
+    if (typeof this.props.id !== undefined) {
+      this.setState({ ...this.props.activity })
+      console.log(this.props.activity)
+    }
+  }
+  
+
   render() {
     const {
       name,
@@ -29,7 +37,7 @@ class ActivityForm extends Component {
       categories,
     } = this.state;
 
-    const { handleSubmit } = this.props;
+    const { handleSubmit, id } = this.props;
 
     return (
       <div>
@@ -47,9 +55,9 @@ class ActivityForm extends Component {
           placeholder="OPTIONAL - add some details"
           onChange={this.handleActivityInput} />
 
-        <Button variant="contained" color="primary" onClick={() => { handleSubmit(this.state) }}>Submit</Button>
+        <Button variant="contained" color="primary" onClick={() => { handleSubmit({...this.state}, id) }}>Submit</Button>
         {
-          Object.keys(ACTIVITY_CATEGORIES).map((category, index) => 
+          Object.keys(ACTIVITY_CATEGORIES).map(category => 
             <Chip 
               key={category}
               variant={categories.includes(category) ? "default" : "outlined"}

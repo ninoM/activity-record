@@ -11,6 +11,7 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles';
+import { ACTIVITY_CATEGORIES } from '../../constant';
 
 const styles = () => ({
   root: {
@@ -19,6 +20,22 @@ const styles = () => ({
 });
 
 class Activity extends Component {
+  state = {
+    editMode: false,
+  }
+
+  activateEditMode = () => {
+    this.setState({ editMode: true });
+  }
+
+  deactivateEditMode = () => {
+    this.setState({ editMode: false });
+  }
+
+  handleSubmit = (updatedActivity, index) => {
+    this.props.edit(updatedActivity, index);
+  }
+  
   render() {
     const {
       id,
@@ -31,6 +48,7 @@ class Activity extends Component {
       toggle,
       remove,
     } = this.props;
+
     return (
       <React.Fragment>
         <ExpansionPanel className={classes.root}>
@@ -47,12 +65,12 @@ class Activity extends Component {
               { details }
             </Typography>
             {
-              Object.keys(categories).map(categoryKey => 
+              categories.map(categoryKey => 
                 <Chip 
                 key={categoryKey}
                 color="secondary"
                 variant="default"
-                label={categories[categoryKey]} />
+                label={ACTIVITY_CATEGORIES[categoryKey]} />
                 )
             }
           </ExpansionPanelDetails>
@@ -63,6 +81,20 @@ class Activity extends Component {
             </Button>
           </ExpansionPanelActions>
         </ExpansionPanel>
+        <FormModal 
+          id={id}
+          activity={
+            {
+              name,
+              details,
+              categories,
+              dueDate,
+              status,
+            }
+          }
+          editMode={this.state.editMode}
+          handleClose={this.deactivateEditMode}
+          handleSubmit={this.handleSubmit} />
       </React.Fragment>
     );
   }

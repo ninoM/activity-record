@@ -20,21 +20,21 @@ class Activities extends Component {
     activities: [
       {
         name: "Buy new tires",
-        categories: [ACTIVITY_CATEGORIES.personal],
+        categories: ["personal"],
         dueDate: "Next week",
         status: "complete",
         details: "4 tires to buy",
       },
       {
         name: "Get business cards",
-        categories: [ACTIVITY_CATEGORIES.business],
+        categories: ["business"],
         dueDate: "tomorrow",
         status: "incomplete",
         details: "have to pick up all 500 business cards",
       },
       {
         name: "Take a break",
-        categories: [ACTIVITY_CATEGORIES.personal, ACTIVITY_CATEGORIES.leisure],
+        categories: ["personal", "leisure"],
         dueDate: "in an hour",
         status: "incomplete",
         details: "have to take a break and drink water",
@@ -105,6 +105,7 @@ class Activities extends Component {
                 handleSubmit={this.handleActivityEdit}
                 handleActivityInput={this.handleActivityInput}
                 handleCategoryToggle={this.handleCategoryToggle}
+                edit={this.handleActivityEdit}
                 id={index} 
                 key={index} 
                 remove={this.handleActivityDelete} 
