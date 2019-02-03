@@ -59,10 +59,13 @@ class Activities extends Component {
 
   handleActivityDelete = index => {
     const updatedActivities = [...this.state.activities];
-    const firebaseId = updatedActivities[index].id;
+    const firebaseId = updatedActivities[index].id
     updatedActivities.splice(index, 1);
     this.setState({ activities: updatedActivities });
-    Firestore.collection("activities").doc(firebaseId).delete();
+
+    if (firebaseId) {
+      Firestore.collection("activities").doc(firebaseId).delete();
+    }
   }
 
   handleActivityEdit = (updatedActivity, index) => {
