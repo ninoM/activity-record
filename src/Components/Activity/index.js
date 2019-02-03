@@ -10,14 +10,18 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles'
 import { ACTIVITY_CATEGORIES } from '../../constant';
 import Moment from "moment";
 
 const styles = () => ({
-  root: {
-    width: "100%",
+  category: {
+    margin: "5px",
   },
+  details: {
+    marginBottom: "20px",
+  }
 });
 
 class Activity extends Component {
@@ -54,33 +58,46 @@ class Activity extends Component {
 
     return (
       <React.Fragment>
-        <ExpansionPanel className={classes.root}>
+        <ExpansionPanel>
           <ExpansionPanelSummary>
-            <Typography  variant="h6">
-            <IconButton onClick={e => { toggle(index, e) }}>
-              {status === "complete" ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }
-            </IconButton>
-            { status === "complete" ? <del>{name}</del> : name}
-            </Typography>
-            <Typography variant="subtitle1">
-              {
-                Moment.unix(dueDate.seconds).fromNow()
-              }
-            </Typography>
+            <Grid container justify="space-between">
+              <Grid item xs={10}>
+                <Typography  variant="h6">
+                <IconButton onClick={e => { toggle(index, e) }}>
+                  {status === "complete" ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }
+                </IconButton>
+                { status === "complete" ? <del>{name}</del> : name}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="subtitle1">
+                  {
+                    Moment.unix(dueDate.seconds).fromNow()
+                  }
+                </Typography>
+                </Grid>
+            </Grid>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Typography variant="body1">
-              { details }
-            </Typography>
-            {
-              categories.map(categoryKey => 
-                <Chip 
-                key={categoryKey}
-                color="secondary"
-                variant="default"
-                label={ACTIVITY_CATEGORIES[categoryKey]} />
-                )
-            }
+            <Grid container justify="center">
+              <Grid item xs={12} className={classes.details}>
+                <Typography variant="body1">
+                  { details }
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                {
+                  categories.map(categoryKey => 
+                    <Chip 
+                    className={classes.category}
+                    key={categoryKey}
+                    color="secondary"
+                    variant="default"
+                    label={ACTIVITY_CATEGORIES[categoryKey]} />
+                    )
+                  }
+              </Grid>
+            </Grid>
           </ExpansionPanelDetails>
           <ExpansionPanelActions>
           <Button onClick={() => { remove(index) }} color="secondary">Remove</Button>
