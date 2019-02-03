@@ -33,3 +33,10 @@ This app records your activities! No concept of users yet so this is a shared da
   - UI / Layout
 
 ## Total working hours: _60h (two and a half days)_
+
+## **Screenshots**
+
+![Landing page](https://i.imgur.com/mbVXbtx.png)
+![View details](https://i.imgur.com/UoJbqhv.png)
+![Add activty](https://i.imgur.com/bCNqRQQ.png)
+![Date time picker](https://i.imgur.com/KbWS8lV.png)
