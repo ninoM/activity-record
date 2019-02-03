@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
-import TextField from '@material-ui/core/TextField';
 import Activity from '../../Components/Activity';
+import ActivityForm from '../../Components/ActivityForm'
 import { withStyles } from '@material-ui/core/styles';
+
+import {
+  ACTIVITY_CATEGORIES,
+  DEFAULT_ACTIVITY,
+} from '../../constant';
 
 const styles = () => ({
   activitiesContainer: {
@@ -14,48 +19,48 @@ class Activities extends Component {
     activities: [
       {
         name: "Buy new tires",
-        category: "personal",
+        categories: [ACTIVITY_CATEGORIES.personal],
         dueDate: "Next week",
         status: "complete",
         details: "4 tires to buy",
       },
       {
         name: "Get business cards",
-        category: "business",
+        categories: [ACTIVITY_CATEGORIES.business],
         dueDate: "tomorrow",
         status: "incomplete",
         details: "have to pick up all 500 business cards",
       },
       {
         name: "Take a break",
-        category: "personal",
+        categories: [ACTIVITY_CATEGORIES.personal, ACTIVITY_CATEGORIES.leisure],
         dueDate: "in an hour",
         status: "incomplete",
         details: "have to take a break and drink water",
       },
     ],
-    currentActivity: "",
+    currentActivity: DEFAULT_ACTIVITY,
   };
 
   submitActivity = event => {
-    event.key === "Enter" &&
+    event.preventDefault();
     this.setState(({activities, currentActivity}) => ({
-      currentActivity: "",
+      currentActivity: DEFAULT_ACTIVITY,
       activities: [
         ...activities, 
         { 
-          name: currentActivity,
-          category: "personal",
-          dueDate: "tomorrow",
-          status: "incomplete",
-          details: "some details here",
+          name: currentActivity.name,
+          categories: currentActivity.categories,
+          dueDate: currentActivity.dueDate,
+          status: currentActivity.status,
+          details: currentActivity.details,
         }
       ]
     }));
   }
 
   handleActivityInput = event => {
-    this.setState({ currentActivity: event.target.value });
+    this.setState({ currentActivity: { ...this.state.currentActivity, [event.target.id]: event.target.value} });
   }
 
   handleActivityToggle = (index, e) => {
@@ -71,21 +76,48 @@ class Activities extends Component {
     this.setState({ activities: updatedActivities });
   }
 
+  handleActivityEdit = (updatedActivity, index) => {
+    const updatedActivities = [...this.state.activities]
+    updatedActivities[index] = updatedActivity;
+    this.setState({ activities: updatedActivities });
+  }
+
+  handleCategoryToggle = category => {
+    const { currentActivity } = this.state;
+    const currentCategory = currentActivity.categories;
+    if (currentCategory.includes(category)) {
+      const updatedCategories = [...currentCategory]
+      updatedCategories.splice(currentCategory.indexOf(category), 1)
+      this.setState({currentActivity: {...currentActivity, categories: updatedCategories}})
+    } else {
+      this.setState({ currentActivity: { ...currentActivity, categories: [...currentCategory, category] } })
+    }
+  }
+
   render() {
     const { classes } = this.props;
+    const {
+      activities,
+      currentActivity
+    } = this.state;
     
     return (
       <div>
-      <TextField 
-        value={this.state.currentActivity} 
-        onKeyPress={this.submitActivity} 
-        placeholder="What would you like to do?"
-        onChange={this.handleActivityInput} />
-
+        <ActivityForm 
+          handleSubmit={this.submitActivity}
+          handleActivityInput={this.handleActivityInput}
+          handleCategoryToggle={this.handleCategoryToggle}
+          {...currentActivity} />
       <div className={classes.activitiesContainer}>
         {
-          this.state.activities.map((activity, index) => 
-            <Activity {...activity} id={index} key={index} remove={this.handleActivityDelete} toggle={this.handleActivityToggle} />)
+          activities.map((activity, index) => 
+            <Activity 
+              {...activity} 
+              id={index} 
+              key={index} 
+              edit={this.handleActivityEdit}
+              remove={this.handleActivityDelete} 
+              toggle={this.handleActivityToggle} />)
         }
       </div>
         </div>

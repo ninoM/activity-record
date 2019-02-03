@@ -4,7 +4,10 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
+import Chip from '@material-ui/core/Chip';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import TextField from '@material-ui/core/TextField';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Button from '@material-ui/core/Button';
@@ -23,7 +26,7 @@ class Activity extends Component {
       id,
       name,
       dueDate,
-      category,
+      categories,
       status,
       details,
       classes,
@@ -34,7 +37,7 @@ class Activity extends Component {
       <React.Fragment>
         <ExpansionPanel className={classes.root}>
           <ExpansionPanelSummary>
-            <Typography variant="h6">
+            <Typography  variant="h6">
             <IconButton onClick={e => { toggle(id, e) }}>
               {status === "complete" ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }
             </IconButton>
@@ -45,12 +48,19 @@ class Activity extends Component {
             <Typography variant="body1">
               { details }
             </Typography>
+            {
+              Object.keys(categories).map(categoryKey => 
+                <Chip 
+                color="secondary"
+                variant="default"
+                label={categories[categoryKey]} />
+                )
+            }
           </ExpansionPanelDetails>
           <ExpansionPanelActions>
-
           <Button onClick={() => { remove(id) }} color="secondary">Remove</Button>
-            <Button onClick={() => { toggle(id) }} variant="contained" color="primary">
-              { status === "complete" ? "Not yet done" : "This is done" }
+            <Button onClick={this.edit} variant="contained" color="primary">
+              Edit activity
             </Button>
           </ExpansionPanelActions>
         </ExpansionPanel>
