@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles';
 import { ACTIVITY_CATEGORIES } from '../../constant';
+import Moment from "moment";
 
 const styles = () => ({
   root: {
@@ -34,6 +35,7 @@ class Activity extends Component {
 
   handleSubmit = (updatedActivity, index) => {
     this.props.edit(updatedActivity, index);
+    this.deactivateEditMode();
   }
   
   render() {
@@ -59,6 +61,11 @@ class Activity extends Component {
               {status === "complete" ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }
             </IconButton>
             { status === "complete" ? <del>{name}</del> : name}
+            </Typography>
+            <Typography variant="subtitle1">
+              {
+                Moment.unix(dueDate.seconds).fromNow()
+              }
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>

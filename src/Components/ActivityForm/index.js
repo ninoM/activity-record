@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import Moment from 'moment';
+import { Firebase } from '../../ApiLayer'
+import { DateTimePicker } from 'material-ui-pickers';
 import { ACTIVITY_CATEGORIES, DEFAULT_ACTIVITY } from '../../constant'
 
 class ActivityForm extends Component {
@@ -22,6 +25,10 @@ class ActivityForm extends Component {
     }
   }
 
+  handleDateChange = date => {
+    this.setState({dueDate: Firebase.firestore.Timestamp.fromMillis(parseInt(date.format("x")))});
+  }
+
   componentDidMount() {
     if (typeof this.props.index !== undefined) {
       this.setState({ ...this.props.activity })
@@ -34,6 +41,7 @@ class ActivityForm extends Component {
       name,
       details,
       categories,
+      dueDate,
     } = this.state;
 
     const { handleSubmit, index} = this.props;
@@ -53,6 +61,8 @@ class ActivityForm extends Component {
           value={details} 
           placeholder="OPTIONAL - add some details"
           onChange={this.handleActivityInput} />
+
+        <DateTimePicker onChange={this.handleDateChange} value={Moment.unix(dueDate.seconds)} />
 
         <Button variant="contained" color="primary" onClick={() => { handleSubmit({...this.state}, index) }}>Submit</Button>
         {

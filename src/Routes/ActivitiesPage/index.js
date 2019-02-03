@@ -32,16 +32,17 @@ class Activities extends Component {
         {...activity},
       ]
     }));
+    this.deactivateEditMode();
 
     // Update firebase
     Firestore.collection("activities").add({
       ...activity
     }).then(ref => {
       const updatedActivities = this.state.activities.map(activity => {
-        if (activity.id === undefined) {
-          return ({...activity, id: ref.id})
-        } else {
+        if (activity.id) {
           return activity
+        } else {
+          return ({...activity, id: ref.id})
         }
       });
       this.setState({ activities: updatedActivities });
@@ -115,7 +116,7 @@ class Activities extends Component {
                 handleActivityInput={this.handleActivityInput}
                 handleCategoryToggle={this.handleCategoryToggle}
                 edit={this.handleActivityEdit}
-                key={index} 
+                key={activity.id} 
                 index={index}
                 remove={this.handleActivityDelete} 
                 toggle={this.handleActivityToggle} />)
